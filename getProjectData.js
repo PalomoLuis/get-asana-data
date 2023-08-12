@@ -24,4 +24,6 @@ async function getProjectData () {
     }
 
     getData(config.projectgid)
+
+    return true;
 }
