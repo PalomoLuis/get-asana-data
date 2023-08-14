@@ -10,7 +10,9 @@ function fetchProjects() {
     //SET CONFIGURATION FROM CONFIG SHEET
     const config = {
       apiKey: configSheet.getRange('B2').getValue(),
-      workspaceGid: configSheet.getRange('B3').getValue()
+      workspaceGid: configSheet.getRange('B3').getValue(),
+      startDate: new Date(configSheet.getRange('B4').getValue()),
+      endDate: new Date(configSheet.getRange('B5').getValue())
     }
     if(config.workspaceGid === '') {
       Logger.log(`Please, add WORKSPACE GID in config sheet tab`)
@@ -82,6 +84,27 @@ function fetchProjects() {
     var newArray = projects.map(function(obj) {
       return [obj[0], obj[1], new Date(obj[2])] ;
     });
+  
+    //IF CONFIG HAVE DATES
+    let projectsByStartDate = [];
+    if(config.startDate !== '') {
+      console.log(config.startDate)
+      console.log(newArray[0][2])
+      console.log(newArray[0][2] > config.startDate)
+      newArray.map((value, index) => {
+        if(value[2] > config.startDate) projectsByStartDate.push(value) 
+      })
+      newArray = projectsByStartDate
+    }
+  
+    let projectsByEndDate = [];
+    if(config.endDate !== '') {
+      newArray.map((value, index) => {
+        if(value[2] < config.endDate) projectsByEndDate.push(value) 
+      })
+      newArray = projectsByEndDate
+    }
+  
   
     newArray.sort(function(a, b) {
       return a[2] - b[2];
